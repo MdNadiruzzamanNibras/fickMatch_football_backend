@@ -4,7 +4,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const port = 5000
 
 
-const uri = "mongodb+srv://xff:<password>@cluster0.5rgf1kx.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://xff:2e8oQw0PsLup1Y90@cluster0.5rgf1kx.mongodb.net/?retryWrites=true&w=majority`;
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
@@ -18,8 +18,15 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    const footballCollection = client.db('footballCollection').collection('matchs');
+    console.log("You successfully connected to MongoDB!");
+    app.get('/matchs', async(req,res)=>{
+      const qurey = {}
+      const cursor =  footballCollection.find(qurey)
+      const matchs = await cursor.toArray()
+      console.log(matchs);
+      res.send(matchs)
+    })
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();
